@@ -1,0 +1,59 @@
+{% load humanize %}
+
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Budget Amount</th>
+            <th>Actual Amount</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for saving in savings %}
+        <tr>
+            <td>{{ saving.name }}</td>
+            <td class="amount-column">{{ saving.budget_amount|floatformat:0|intcomma }}</td>
+            <td class="amount-column">{{ saving.actual_amount|floatformat:0|intcomma }}</td>
+            <td>{{ saving.start_date|date:"d M" }}</td>
+            <td>{{ saving.end_date|date:"d M" }}</td>
+            <td>
+                <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ saving.id }}">
+                    Delete
+                </a>
+                <a href="{% url 'update_savings' saving.id %}" class="text-primary">Update</a>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="deleteModal{{ saving.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ saving.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ saving.id }}">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete "{{ saving.name }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form method="POST" action="{% url 'delete_savings' saving.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Yes, delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% empty %}
+        <tr>
+            <td colspan="6">No savings data available</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

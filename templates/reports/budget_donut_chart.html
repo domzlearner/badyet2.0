@@ -1,0 +1,87 @@
+<div>
+    Budget
+    <label class="switch">
+        <input type="checkbox" id="chart-toggle">
+        <span class="slider round"></span>
+    </label>
+    Actual
+</div>
+<br>
+<canvas id="budgetChart" width="350" height="350"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const budgetData = {
+        remaining: {{ remaining_budget }},
+        savings: {{ total_budget_savings }},
+    };
+
+    const actualData = {
+        remaining: {{ remaining_actual }},
+        savings: {{ total_actual_savings }},
+    };
+
+    Chart.register({
+        id: 'centerText',
+        afterDatasetsDraw(chart) {
+            const { ctx, chartArea: { width, height } } = chart;
+            const dataToDisplay = chart.data.datasets[0].data[0];
+            const displayAmount = Number.isInteger(dataToDisplay) 
+                ? dataToDisplay.toLocaleString() 
+                : dataToDisplay.toFixed(2).toLocaleString();
+
+            ctx.save();
+            ctx.font = '35px Open Sans';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('₱ ' + displayAmount, width / 2, height / 2);
+            ctx.restore();
+        }
+    });
+
+    var budgetChart; 
+
+    function createChart(data, labels) {
+        if (budgetChart) {  
+            budgetChart.destroy(); 
+        }
+        
+        var ctx = document.getElementById('budgetChart').getContext('2d');
+        budgetChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Amount',
+                    data: [data.remaining, data.savings],
+                    backgroundColor: ['#cbc5ff', '#ffcccb'],
+                    hoverBackgroundColor: ['#a197ff', '#ff9999'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: true, 
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    document.getElementById('chart-toggle').addEventListener('change', function() {
+        if (this.checked) {
+            createChart(actualData, ['Remaining Actual', 'Savings']);
+        } else {
+            createChart(budgetData, ['Remaining Budget', 'Savings']);
+        }
+    });
+
+    createChart(budgetData, ['Remaining Budget', 'Savings']);
+
+</script>

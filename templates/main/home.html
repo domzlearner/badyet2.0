@@ -1,0 +1,8 @@
+{% extends 'main/base.html' %}
+{% block body_class %}home-background{% endblock %}
+{% block content %}
+<div class="home-container">
+    <a href="{% url 'login' %}">Login</a>
+    <p> Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+</div>
+{% endblock content %}
