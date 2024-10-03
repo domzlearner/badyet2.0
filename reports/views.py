@@ -1,6 +1,7 @@
 from django.db.models import Q, Sum
 from income.models import Income
 from savings.models import Savings
+from bills.models import Bills
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -31,18 +32,33 @@ def budget_donut_chart(request):
             start_date__gte=income_start_date,
             end_date__lte=income_end_date
         ).aggregate(total_actual_savings=Sum('actual_amount'))['total_actual_savings'] or 0
-    else:
-        total_budget_savings = total_actual_savings = 0
 
-    remaining_budget = total_budget_income - total_budget_savings
-    remaining_actual = total_actual_income - total_actual_savings
+        total_budget_bills = Bills.objects.filter(
+            user=user,
+            due_date__gte=income_start_date,
+            due_date__lte=income_end_date
+        ).aggregate(total_budget_bills=Sum('budget_amount'))['total_budget_bills'] or 0
+
+        total_actual_bills = Bills.objects.filter(
+            user=user,
+            due_date__gte=income_start_date,
+            due_date__lte=income_end_date
+        ).aggregate(total_actual_bills=Sum('actual_amount'))['total_actual_bills'] or 0
+
+    else:
+        total_budget_savings = total_actual_savings = total_budget_bills = total_actual_bills = 0
+
+    remaining_budget = total_budget_income - total_budget_savings - total_budget_bills
+    remaining_actual = total_actual_income - total_actual_savings - total_actual_bills
 
     context = {
         'total_budget_income': total_budget_income,
         'total_budget_savings': total_budget_savings,
+        'total_budget_bills': total_budget_bills,
         'remaining_budget': remaining_budget,
         'total_actual_income': total_actual_income,
         'total_actual_savings': total_actual_savings,
+        'total_actual_bills': total_actual_bills,
         'remaining_actual': remaining_actual,
     }
     

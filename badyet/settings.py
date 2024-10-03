@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'income',
     'savings',
+    'bills',
     'reports',
 ]
 

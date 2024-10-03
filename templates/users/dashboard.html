@@ -4,7 +4,7 @@
 
 <div class="dashboard-container">
     <div class="top-container">
-        <h3>Welcome, {{ user.username|title }}</h3>
+        <h5>Welcome, {{ user.username }}</h5>
         <a href="{% url 'logout' %}">Logout</a>
     </div>
 
@@ -23,6 +23,14 @@
         <br>
         
         {% include 'savings/savings_table.html' %}
+
+        <br>
+        <h4>Bills</h4>
+        <a href="{% url 'add_bills' %}">Add</a>
+        <br>
+        <br>
+        
+        {% include 'bills/bills_table.html' %}
     </div>
     
     <div class="right-container">  

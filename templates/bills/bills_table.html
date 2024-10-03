@@ -1,0 +1,57 @@
+{% load humanize %}
+
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Budget Amount</th>
+            <th>Actual Amount</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bill in bills %}
+        <tr>
+            <td>{{ bill.name }}</td>
+            <td class="amount-column">{{ bill.budget_amount|floatformat:0|intcomma }}</td>
+            <td class="amount-column">{{ bill.actual_amount|floatformat:0|intcomma }}</td>
+            <td>{{ bill.due_date|date:"d M" }}</td>
+            <td>
+                <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ bill.id }}">
+                    Delete
+                </a>
+                <a href="{% url 'update_bills' bill.id %}" class="text-primary">Update</a>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="deleteModal{{ bill.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ bill.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ bill.id }}">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete "{{ bill.name }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form method="POST" action="{% url 'delete_bills' bill.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Yes, delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% empty %}
+        <tr>
+            <td colspan="6">No bills data available</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

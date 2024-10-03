@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+{% block body_class %}login-background{% endblock %}
+{% block content %}
+
+<div class="login-container">
+  <a href="{% url 'dashboard' %}" style="font-size: 25px; position: relative; left: 90%;">&times;</a>
+  <div class="form-group">
+    <form method="post">
+        {% csrf_token %}
+        <label>{{ form.name.label }}</label>
+        {{ form.name }}
+        <label>{{ form.actual_amount.label }}</label>
+        {{ form.actual_amount }}
+        <label>{{ form.due_date.label }}</label>
+        <input type="date" name="due_date" id="id_date">
+      <br>
+      <br>
+      <input class="button" type="submit" value="Update">
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

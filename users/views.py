@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm, UserRegistrationForm
 from income.models import Income
 from savings.models import Savings
+from bills.models import Bills
 from reports.views import budget_donut_chart
 
 def login_view(request):
@@ -47,6 +48,7 @@ def dashboard_view(request):
     user=request.user
     incomes = Income.objects.filter(user=request.user)
     savings = Savings.objects.filter(user=request.user)
+    bills = Bills.objects.filter(user=request.user)
     # print(f"Income data | user: {incomes} | {user}")
 
     chart_data = budget_donut_chart(request)
@@ -56,10 +58,13 @@ def dashboard_view(request):
         'user': user,
         'incomes': incomes,
         'savings': savings,
+        'bills': bills,
         'total_budget_income': chart_data['total_budget_income'],
         'total_budget_savings': chart_data['total_budget_savings'],
+        'total_budget_bills': chart_data['total_budget_bills'],
         'remaining_budget': chart_data['remaining_budget'],
         'total_actual_income': chart_data['total_actual_income'],
         'total_actual_savings': chart_data['total_actual_savings'],
+        'total_actual_bills': chart_data['total_actual_bills'],
         'remaining_actual': chart_data['remaining_actual'],
     })

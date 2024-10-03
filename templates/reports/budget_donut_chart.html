@@ -15,11 +15,13 @@
     const budgetData = {
         remaining: {{ remaining_budget }},
         savings: {{ total_budget_savings }},
+        bills: {{ total_budget_bills }},
     };
 
     const actualData = {
         remaining: {{ remaining_actual }},
         savings: {{ total_actual_savings }},
+        bills: {{ total_actual_bills }},
     };
 
     Chart.register({
@@ -55,9 +57,9 @@
                 labels: labels,
                 datasets: [{
                     label: 'Amount',
-                    data: [data.remaining, data.savings],
-                    backgroundColor: ['#cbc5ff', '#ffcccb'],
-                    hoverBackgroundColor: ['#a197ff', '#ff9999'],
+                    data: [data.remaining, data.savings, data.bills],
+                    backgroundColor: ['#cbc5ff', '#ffcccb', '#c2f0c2'],
+                    hoverBackgroundColor: ['#a197ff', '#ff9999', '#98e098'],
                     borderWidth: 1
                 }]
             },
@@ -76,12 +78,12 @@
 
     document.getElementById('chart-toggle').addEventListener('change', function() {
         if (this.checked) {
-            createChart(actualData, ['Remaining Actual', 'Savings']);
+            createChart(actualData, ['Remaining Actual', 'Savings', 'Bills']);
         } else {
-            createChart(budgetData, ['Remaining Budget', 'Savings']);
+            createChart(budgetData, ['Remaining Budget', 'Savings', 'Bills']);
         }
     });
 
-    createChart(budgetData, ['Remaining Budget', 'Savings']);
+    createChart(budgetData, ['Remaining Budget', 'Savings', 'Bills']);
 
 </script>
