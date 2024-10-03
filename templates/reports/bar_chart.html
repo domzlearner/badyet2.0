@@ -1,0 +1,103 @@
+
+<canvas id="barChart" width="600" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+    const barBudgetData = {
+        income: {{ total_budget_income }},
+        savings: {{ total_budget_savings }},
+        bills: {{ total_budget_bills }},
+    };
+
+    const barActualData = {
+        income: {{ total_actual_income }},
+        savings: {{ total_actual_savings }},
+        bills: {{ total_actual_bills }},
+    };
+
+    var barChart; 
+
+    function createBarChart(data, labels) {
+        if (barChart) {
+            barChart.destroy();
+        }
+
+        const ctx = document.getElementById('barChart').getContext('2d');
+        barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Budget',
+                        data: [barBudgetData.income, barBudgetData.savings, barBudgetData.bills],
+                        backgroundColor: '#CCCCCC',
+                        hoverBackgroundColor: '#CCCCCC',
+                        borderColor: 'rgba(203, 197, 255, 1)',
+                        borderWidth: 1,
+                    },
+                    {
+                        label: 'Actual',
+                        data: [barActualData.income, barActualData.savings, barActualData.bills],
+                        backgroundColor: '#4CAF50',
+                        hoverBackgroundColor: '#4CAF50',
+                        borderColor: 'rgba(255, 204, 203, 1)',
+                        borderWidth: 1,
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            // text: 'Amount (₱)'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    datalabels: {
+                        anchor: 'center',
+                        align: 'end',
+                        formatter: (value) => {
+                            return value.toLocaleString(); // Format number for display
+                        },
+                        color: '#000000', // Set color for the text
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    }
+
+     createBarChart(barBudgetData, ['Income', 'Savings', 'Bills']);
+
+    document.getElementById('chart-toggle').addEventListener('change', function() {
+        if (this.checked) {
+            createBarChart(barActualData, ['Income', 'Savings', 'Bills']);
+        } else {
+            createBarChart(barBudgetData, ['Income', 'Savings', 'Bills']);
+        }
+    });
+
+</script>
