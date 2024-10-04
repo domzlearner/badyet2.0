@@ -1,0 +1,68 @@
+{% load static %}
+
+<div class="date-selector">
+    <label for="month">Month</label>
+    <select id="month" onchange="updateDateRange()">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
+    
+    <label for="year">Year</label>
+    <select id="year" onchange="updateDateRange()">
+        <!-- Dynamic year options will be appended here by JavaScript -->
+    </select>
+</div>
+
+<div id="date-range" style="display: inline-block; margin-left: 10px;"></div>
+
+<script src="{% static 'js/dropdown.js' %}"></script>
+
+<script>
+    // Function to dynamically generate the year options
+    function populateYearOptions() {
+        const yearSelect = document.getElementById('year');
+        const currentYear = new Date().getFullYear();
+
+        for (let i = 0; i < 5; i++) {  // Generate years from current year to 4 years in the future
+            const yearOption = document.createElement('option');
+            yearOption.value = currentYear + i;
+            yearOption.text = currentYear + i;
+            yearSelect.appendChild(yearOption);
+        }
+    }
+
+    // Function to calculate and update the date range
+    function updateDateRange() {
+        const month = document.getElementById('month').value;
+        const year = document.getElementById('year').value;
+
+        const startDate = new Date(year, month - 1, 1);
+        const endDate = new Date(year, month, 0);
+
+        // Extract the month name and day only (e.g., "January 1")
+        const startMonth = startDate.toLocaleDateString('en-US', { month: 'long' });
+        const startDay = startDate.getDate();
+        const endDay = endDate.getDate();
+
+        // Display the date range in "Month Day - Day" format
+        const dateRangeStr = `${startMonth} ${startDay} - ${endDay}`;
+
+        document.getElementById('date-range').innerText = dateRangeStr;
+    }
+
+    // Initialize with the current date and populate year options when the page loads
+    window.onload = function() {
+        populateYearOptions();
+        updateDateRange();
+    };
+</script>

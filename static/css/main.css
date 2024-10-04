@@ -131,7 +131,13 @@ body.dashboard-background {
 
 .top-container {
     padding: 10px;
-    grid-column: 1 span 3;
+    grid-column: 1 span 2;
+}
+
+.top-container-right {
+    padding: 10px;
+    grid-column: 3;
+    font-size: medium;
 }
 
 .left-container {
