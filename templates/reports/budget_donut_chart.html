@@ -7,7 +7,7 @@
     Actual
 </div>
 <br>
-<canvas id="budgetChart" width="360" height="360"></canvas>
+<canvas id="budgetChart" width="350" height="350"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -24,7 +24,7 @@
         bills: {{ total_actual_bills }},
     };
 
-    Chart.register({
+    const centerTextPlugin = {
         id: 'centerText',
         afterDatasetsDraw(chart) {
             const { ctx, chartArea: { width, height } } = chart;
@@ -41,7 +41,9 @@
             ctx.fillText('₱ ' + displayAmount, width / 2, height / 2);
             ctx.restore();
         }
-    });
+    };
+
+    Chart.register(centerTextPlugin);
 
     var budgetChart; 
 
@@ -72,7 +74,8 @@
                         display: false
                     }
                 }
-            }
+            },
+            plugins: [centerTextPlugin]
         });
     }
 
